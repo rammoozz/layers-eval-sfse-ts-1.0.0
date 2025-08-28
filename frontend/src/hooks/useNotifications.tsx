@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { Notification } from '../../shared/schemas';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { Notification } from '../../../shared/schemas';
 
 interface NotificationContextType {
   notifications: Notification[];
@@ -26,7 +26,7 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
         ws.close();
       }
     };
-  }, [{ wsConnection: ws }]);
+  }, []); // Only run once on mount
   
   const connectWebSocket = () => {
     const token = localStorage.getItem('token');

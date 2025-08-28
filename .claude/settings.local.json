@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__playwright__browser_navigate",
+      "Bash(npm install)",
+      "Bash(cp:*)",
+      "Bash(npm run dev:*)",
+      "Bash(node:*)",
+      "Bash(npm install:*)",
+      "mcp__playwright__browser_fill_form",
+      "mcp__playwright__browser_click",
+      "Bash(npm run build:*)",
+      "mcp__playwright__browser_type",
+      "Bash(npm test)",
+      "Bash(npx playwright:*)",
+      "Bash(npm run:*)",
+      "Bash(taskkill:*)",
+      "Bash(cmd /c:*)",
+      "Bash(curl:*)",
+      "Bash(del test-auth-fix.js)",
+      "Bash(PORT=3002 npm run dev)",
+      "Bash(wmic process where ProcessId=99844 delete:*)",
+      "Bash(npm test:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

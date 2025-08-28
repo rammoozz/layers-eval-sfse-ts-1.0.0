@@ -31,4 +31,31 @@ api.interceptors.response.use(
   }
 );
 
+// Profile API functions
+export const updateProfile = async (userData: { name: string; email: string }) => {
+  const response = await api.put('/api/users/profile', userData);
+  return response.data;
+};
+
+// Data export API functions
+export const exportUserData = async (format: 'csv' | 'json', includeNotifications = false) => {
+  const response = await api.get('/api/users/export', {
+    params: { format, includeNotifications },
+    responseType: 'blob',
+  });
+  
+  // Create download link
+  const blob = new Blob([response.data]);
+  const url = window.URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `user-data.${format}`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  window.URL.revokeObjectURL(url);
+  
+  return response.data;
+};
+
 export default api;

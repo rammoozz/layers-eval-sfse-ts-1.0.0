@@ -1,0 +1,138 @@
+import { test, expect } from '@playwright/test';
+import { TestHelpers, TEST_CREDENTIALS, ROUTES } from '../utils/test-helpers';
+
+test.describe('Login Flow', () => {
+  test.beforeEach(async ({ page }) => {
+    // Clear any existing session
+    await page.context().clearCookies();
+    // Navigate to page first, then clear localStorage
+    await page.goto('/');
+    await page.evaluate(() => {
+      try {
+        localStorage.clear();
+      } catch (e) {
+        // Ignore localStorage errors in case it's not available
+      }
+    });
+  });
+
+  test('should display login page correctly', async ({ page }) => {
+    const helpers = new TestHelpers(page);
+    
+    await page.goto(ROUTES.LOGIN);
+    
+    // Check that login form elements are present
+    await helpers.assertElementVisible('input[type="email"]');
+    await helpers.assertElementVisible('input[type="password"]');
+    await helpers.assertElementVisible('button[type="submit"]');
+    
+    // Check page title or heading
+    await expect(page.locator('h1')).toContainText(['Login', 'Sign In']);
+  });
+
+  test('should successfully login with valid credentials', async ({ page }) => {
+    const helpers = new TestHelpers(page);
+    
+    // Navigate to login page
+    await page.goto(ROUTES.LOGIN);
+    
+    // Fill in login form
+    await page.fill('input[type="email"]', TEST_CREDENTIALS.email);
+    await page.fill('input[type="password"]', TEST_CREDENTIALS.password);
+    
+    // Wait for the login API response
+    const responsePromise = helpers.waitForApiResponse('/api/auth/login');
+    
+    // Submit form
+    await page.click('button[type="submit"]');
+    
+    // Wait for API response
+    const response = await responsePromise;
+    expect(response.status()).toBe(200);
+    
+    // Should redirect to dashboard
+    await helpers.waitForNavigation('/dashboard');
+    helpers.assertCurrentUrl('/dashboard');
+    
+    // Check that user is logged in (token should be in localStorage)
+    const token = await page.evaluate(() => localStorage.getItem('token'));
+    expect(token).toBeTruthy();
+    
+    // Check that dashboard content is loaded
+    await helpers.assertElementVisible('[data-testid="dashboard"]');
+  });
+
+  test('should show error message with invalid credentials', async ({ page }) => {
+    const helpers = new TestHelpers(page);
+    
+    await page.goto(ROUTES.LOGIN);
+    
+    // Fill in invalid credentials
+    await page.fill('input[type="email"]', 'invalid@test.com');
+    await page.fill('input[type="password"]', 'wrongpassword');
+    
+    // Submit form
+    await page.click('button[type="submit"]');
+    
+    // Should show error message
+    await expect(page.locator('.error, [data-testid="error-message"]')).toBeVisible();
+    
+    // Should remain on login page
+    helpers.assertCurrentUrl('/login');
+    
+    // Token should not be set
+    const token = await page.evaluate(() => localStorage.getItem('token'));
+    expect(token).toBeFalsy();
+  });
+
+  test('should show validation errors for empty fields', async ({ page }) => {
+    await page.goto(ROUTES.LOGIN);
+    
+    // Try to submit with empty fields
+    await page.click('button[type="submit"]');
+    
+    // Should show validation errors or prevent submission
+    const emailField = page.locator('input[type="email"]');
+    const passwordField = page.locator('input[type="password"]');
+    
+    // Check HTML5 validation or custom validation messages
+    const emailValidity = await emailField.evaluate((el: HTMLInputElement) => el.validity.valid);
+    const passwordValidity = await passwordField.evaluate((el: HTMLInputElement) => el.validity.valid);
+    
+    expect(emailValidity || passwordValidity).toBe(false);
+  });
+
+  test('should redirect to dashboard if already logged in', async ({ page }) => {
+    const helpers = new TestHelpers(page);
+    
+    // First login
+    await helpers.login();
+    await helpers.waitForNavigation('/dashboard');
+    
+    // Try to access login page again
+    await page.goto(ROUTES.LOGIN);
+    
+    // Should be redirected back to dashboard
+    await page.waitForTimeout(1000); // Give time for redirect
+    helpers.assertCurrentUrl('/dashboard');
+  });
+
+  test('should logout successfully', async ({ page }) => {
+    const helpers = new TestHelpers(page);
+    
+    // Login first
+    await helpers.login();
+    await helpers.waitForNavigation('/dashboard');
+    
+    // Logout
+    await helpers.logout();
+    
+    // Should redirect to login page
+    await helpers.waitForNavigation('/login');
+    helpers.assertCurrentUrl('/login');
+    
+    // Token should be cleared
+    const token = await page.evaluate(() => localStorage.getItem('token'));
+    expect(token).toBeFalsy();
+  });
+});

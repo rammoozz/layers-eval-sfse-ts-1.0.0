@@ -30,7 +30,7 @@
   },
   "include": [
     "src",
-    "../shared"
-  ],
-  "references": [{ "path": "./tsconfig.node.json" }]
+    "../shared",
+    "vite.config.ts"
+  ]
 }

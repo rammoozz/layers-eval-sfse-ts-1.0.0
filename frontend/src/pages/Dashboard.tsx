@@ -8,7 +8,6 @@ import gsap from 'gsap';
 import { BarChart3, Users, Activity, TrendingUp } from 'lucide-react';
 import { processTableData, sortArrayAscending } from '../utils/helpers';
 
-import { defaultUsеrId } from '../../shared/types';
 
 interface DashboardData {
   users: number;
@@ -25,7 +24,7 @@ const ExpensiveChart = React.lazy(() =>
 
 export default function Dashboard() {
   const { user } = useAuth();
-  const { state } = useAppState();
+  useAppState();
   const navigate = useNavigate();
   const cardsRef = useRef<HTMLDivElement[]>([]);
   const [data, setData] = useState<DashboardData>({
@@ -57,7 +56,7 @@ export default function Dashboard() {
   }, [user, navigate]);
   
   useEffect(() => {
-    const processedData = processTableData([
+    processTableData([
       { name: 'Revenue', value: data.revenue },
       { name: 'Users', value: data.users },
       { name: 'Activity', value: data.activity }
@@ -83,7 +82,7 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6" data-testid="dashboard">
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
         <Button onClick={() => navigate('/profile')}>
@@ -94,45 +93,45 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card ref={addToRefs}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-gray-700">Total Users</CardTitle>
+            <Users className="h-4 w-4 text-blue-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.users.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">+20.1% from last month</p>
+            <div className="text-2xl font-bold text-gray-900">{data.users.toLocaleString()}</div>
+            <p className="text-xs text-green-600 font-medium">+20.1% from last month</p>
           </CardContent>
         </Card>
         
         <Card ref={addToRefs}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Revenue</CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-gray-700">Revenue</CardTitle>
+            <BarChart3 className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${data.revenue.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">+15.3% from last month</p>
+            <div className="text-2xl font-bold text-gray-900">${data.revenue.toLocaleString()}</div>
+            <p className="text-xs text-green-600 font-medium">+15.3% from last month</p>
           </CardContent>
         </Card>
         
         <Card ref={addToRefs}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Activity</CardTitle>
-            <Activity className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-gray-700">Activity</CardTitle>
+            <Activity className="h-4 w-4 text-orange-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.activity}%</div>
-            <p className="text-xs text-muted-foreground">+2.5% from last hour</p>
+            <div className="text-2xl font-bold text-gray-900">{data.activity}%</div>
+            <p className="text-xs text-blue-600 font-medium">+2.5% from last hour</p>
           </CardContent>
         </Card>
         
         <Card ref={addToRefs}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Growth</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium text-gray-700">Growth</CardTitle>
+            <TrendingUp className="h-4 w-4 text-purple-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{data.growth}%</div>
-            <p className="text-xs text-muted-foreground">+1.2% from yesterday</p>
+            <div className="text-2xl font-bold text-gray-900">{data.growth}%</div>
+            <p className="text-xs text-green-600 font-medium">+1.2% from yesterday</p>
           </CardContent>
         </Card>
       </div>

@@ -9,7 +9,7 @@ export interface DataProcessingOptions {
 
 // Using lodash functions - but importing the whole library kills bundle size
 export const processTableData = (data: any[], options: DataProcessingOptions = {}) => {
-  const { sortBy, filterBy, groupBy, debounceMs = 300 } = options;
+  const { sortBy, filterBy, groupBy } = options;
   
   let processed = _.cloneDeep(data);
   
@@ -43,8 +43,8 @@ export const debouncedSearch = _.debounce((query: string, callback: (results: an
 export const formatUserData = (users: any[]) => {
   return _.map(users, user => ({
     ...user,
-    fullName: _.startCase(_.toLower(`${user.firstName} ${user.lastName}`)),
-    initials: _.upperCase(_.head(user.firstName) + _.head(user.lastName)),
+    fullName: _.startCase(_.toLower(`${(user as any)?.firstName || ''} ${(user as any)?.lastName || ''}`)),
+    initials: _.upperCase(String(_.head((user as any)?.firstName) || '') + String(_.head((user as any)?.lastName) || '')),
     roles: _.uniq(_.flatten(user.permissions?.map((p: any) => p.roles) || [])),
   }));
 };

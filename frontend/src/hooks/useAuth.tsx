@@ -1,11 +1,13 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import axios from 'axios';
-import { User } from '../../shared/schemas';
+import { User } from '../../../shared/schemas';
+import { updateProfile as updateProfileApi } from '../services/api';
 
 interface AuthContextType {
   user: User | null;
   login: (email: string, password: string) => Promise<void>;
   logout: () => void;
+  updateProfile: (userData: { name: string; email: string }) => Promise<void>;
   loading: boolean;
 }
 
@@ -66,6 +68,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
     }
   };
 
+  const updateProfile = async (userData: { name: string; email: string }) => {
+    try {
+      const response = await updateProfileApi(userData);
+      setUser(response.data);
+    } catch (error) {
+      throw new Error('Failed to update profile');
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem('token');
     setUser(null);
@@ -75,6 +86,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     user,
     login,
     logout,
+    updateProfile,
     loading,
   };
 

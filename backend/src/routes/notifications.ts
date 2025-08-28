@@ -50,7 +50,7 @@ router.post('/', authenticateToken, async (req, res) => {
     
     res.status(201).json({ 
       success: true, 
-      data: { id: notificationId, ...notification, userId } 
+      data: { ...notification, userId } 
     });
   } catch (error) {
     res.status(500).json({ 

@@ -9,8 +9,6 @@ import Settings from './pages/Settings';
 import Login from './pages/Login';
 import './App.css';
 
-import { UserType } from '../shared/schemas';
-
 function App() {
   return (
     <AppStateProvider>

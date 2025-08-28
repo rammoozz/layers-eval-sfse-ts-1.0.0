@@ -3,6 +3,7 @@ import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
+import { Select } from '@/components/ui/select';
 import gsap from 'gsap';
 import { Bell, Shield, Palette, Globe } from 'lucide-react';
 
@@ -68,7 +69,7 @@ export default function Settings() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm">Email notifications</span>
+              <span className="text-sm text-gray-700">Email notifications</span>
               <Button
                 variant={settings.notifications ? "default" : "outline"}
                 size="sm"
@@ -78,13 +79,13 @@ export default function Settings() {
               </Button>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm">Push notifications</span>
+              <span className="text-sm text-gray-700">Push notifications</span>
               <Button variant="outline" size="sm" disabled>
                 Coming Soon
               </Button>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm">Auto-save</span>
+              <span className="text-sm text-gray-700">Auto-save</span>
               <Button
                 variant={settings.autoSave ? "default" : "outline"}
                 size="sm"
@@ -105,7 +106,7 @@ export default function Settings() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm">Dark mode</span>
+              <span className="text-sm text-gray-700">Dark mode</span>
               <Button
                 variant={settings.darkMode ? "default" : "outline"}
                 size="sm"
@@ -115,18 +116,15 @@ export default function Settings() {
               </Button>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm">Theme</span>
-              <select 
-                className="px-3 py-1 border rounded-md text-sm"
-                defaultValue="blue"
-              >
+              <span className="text-sm text-gray-700">Theme</span>
+              <Select defaultValue="blue" className="w-24">
                 <option value="blue">Blue</option>
                 <option value="green">Green</option>
                 <option value="purple">Purple</option>
-              </select>
+              </Select>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm">Compact mode</span>
+              <span className="text-sm text-gray-700">Compact mode</span>
               <Button variant="outline" size="sm" disabled>
                 Beta
               </Button>
@@ -143,19 +141,19 @@ export default function Settings() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm">Two-factor authentication</span>
+              <span className="text-sm text-gray-700">Two-factor authentication</span>
               <Button variant="outline" size="sm">
                 Enable
               </Button>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm">Data sharing</span>
+              <span className="text-sm text-gray-700">Data sharing</span>
               <Button variant="outline" size="sm">
                 Manage
               </Button>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm">Account deletion</span>
+              <span className="text-sm text-gray-700">Account deletion</span>
               <Button variant="destructive" size="sm">
                 Delete
               </Button>
@@ -172,33 +170,33 @@ export default function Settings() {
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm">Language</span>
-              <select 
-                className="px-3 py-1 border rounded-md text-sm"
+              <span className="text-sm text-gray-700">Language</span>
+              <Select 
                 value={settings.language}
                 onChange={(e) => handleSettingChange('language', e.target.value)}
+                className="w-32"
               >
                 <option value="en">English</option>
                 <option value="es">Spanish</option>
                 <option value="fr">French</option>
                 <option value="de">German</option>
-              </select>
+              </Select>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm">Timezone</span>
-              <select className="px-3 py-1 border rounded-md text-sm">
+              <span className="text-sm text-gray-700">Timezone</span>
+              <Select className="w-40">
                 <option>GMT-8 (Pacific)</option>
                 <option>GMT-5 (Eastern)</option>
                 <option>GMT+0 (UTC)</option>
-              </select>
+              </Select>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm">Date format</span>
-              <select className="px-3 py-1 border rounded-md text-sm">
+              <span className="text-sm text-gray-700">Date format</span>
+              <Select className="w-36">
                 <option>MM/DD/YYYY</option>
                 <option>DD/MM/YYYY</option>
                 <option>YYYY-MM-DD</option>
-              </select>
+              </Select>
             </div>
           </CardContent>
         </Card>
