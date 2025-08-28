@@ -4,12 +4,12 @@ interface AppState {
   theme: string;
   language: string;
   sidebarOpen: boolean;
-  notifications: any[];
-  user: any;
+  notifications: { id: string; message: string; type: string }[];
+  user: { id: string; name: string; email: string } | null;
   loading: boolean;
   error: string | null;
   searchQuery: string;
-  filters: any;
+  filters: Record<string, unknown>;
   selectedItems: string[];
   mousePosition: { x: number; y: number };
   timestamp: number;

@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { useAuth } from '../hooks/useAuth';
 import NotificationDropdown from './NotificationDropdown';
 import { ThemeToggle } from './ThemeToggle';
-import { Bell, LogOut } from 'lucide-react';
+import { Bell, LogOut, Layers, LayoutDashboard, User, Settings } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 export default function Header() {
@@ -23,42 +23,48 @@ export default function Header() {
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <motion.h1 
-            className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+          <motion.div 
+            className="flex items-center space-x-2"
             whileHover={{ scale: 1.05 }}
           >
-            Layers
-          </motion.h1>
+            <Layers className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+            <h1 className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              Layers
+            </h1>
+          </motion.div>
           <nav className="hidden md:flex space-x-2">
             <Link
               to="/"
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                 location.pathname === '/'
                   ? 'bg-gradient-to-r from-blue-500/10 to-purple-500/10 text-blue-600 dark:text-blue-400 shadow-sm'
                   : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'
               }`}
             >
-              Dashboard
+              <LayoutDashboard className="h-4 w-4" />
+              <span>Dashboard</span>
             </Link>
             <Link
               to="/profile"
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                 location.pathname === '/profile'
                   ? 'bg-gradient-to-r from-blue-500/10 to-purple-500/10 text-blue-600 dark:text-blue-400 shadow-sm'
                   : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'
               }`}
             >
-              Profile
+              <User className="h-4 w-4" />
+              <span>Profile</span>
             </Link>
             <Link
               to="/settings"
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`flex items-center space-x-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                 location.pathname === '/settings'
                   ? 'bg-gradient-to-r from-blue-500/10 to-purple-500/10 text-blue-600 dark:text-blue-400 shadow-sm'
                   : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-100/50 dark:hover:bg-gray-800/50'
               }`}
             >
-              Settings
+              <Settings className="h-4 w-4" />
+              <span>Settings</span>
             </Link>
           </nav>
         </div>
@@ -68,7 +74,7 @@ export default function Header() {
             <ThemeToggle />
             <NotificationDropdown>
               <Button variant="ghost" size="sm" className="hover:bg-gray-100/50 dark:hover:bg-gray-800/50">
-                <Bell className="h-4 w-4" />
+                <Bell className="h-4 w-4 text-gray-600 dark:text-gray-400" />
               </Button>
             </NotificationDropdown>
             <div className="flex items-center space-x-2">
@@ -77,9 +83,9 @@ export default function Header() {
                 variant="ghost"
                 size="sm"
                 onClick={logout}
-                className="hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400"
+                className="group hover:bg-red-100 dark:hover:bg-red-900/20 hover:text-red-600 dark:hover:text-red-400"
               >
-                <LogOut className="h-4 w-4" />
+                <LogOut className="h-4 w-4 text-gray-600 dark:text-gray-400 group-hover:text-red-600 dark:group-hover:text-red-400" />
               </Button>
             </div>
           </div>

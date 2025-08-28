@@ -16,9 +16,9 @@ interface DashboardData {
 }
 
 const ExpensiveChart = React.lazy(() => 
-  new Promise(resolve => 
+  new Promise<{ default: React.ComponentType }>(resolve => 
     setTimeout(() => resolve({ default: () => <div>Chart loaded</div> }), 2000)
-  ) as any
+  )
 );
 
 export default function Dashboard() {
@@ -77,7 +77,7 @@ export default function Dashboard() {
   return (
     <div data-testid="dashboard">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-black">Dashboard</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Dashboard</h1>
         <Button onClick={() => navigate('/profile')}>
           View Profile
         </Button>
@@ -86,44 +86,44 @@ export default function Dashboard() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 -mt-8 mb-16">
         <Card ref={addToRefs}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-black">Total Users</CardTitle>
-            <Users className="h-4 w-4 text-blue-600" />
+            <CardTitle className="text-sm font-medium text-gray-900 dark:text-gray-100">Total Users</CardTitle>
+            <Users className="h-4 w-4 text-blue-600 dark:text-blue-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-black">{data.users.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{data.users.toLocaleString()}</div>
             <p className="text-xs text-green-600 font-medium">+20.1% from last month</p>
           </CardContent>
         </Card>
         
         <Card ref={addToRefs}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-black">Revenue</CardTitle>
-            <BarChart3 className="h-4 w-4 text-green-600" />
+            <CardTitle className="text-sm font-medium text-gray-900 dark:text-gray-100">Revenue</CardTitle>
+            <BarChart3 className="h-4 w-4 text-green-600 dark:text-green-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-black">${data.revenue.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">${data.revenue.toLocaleString()}</div>
             <p className="text-xs text-green-600 font-medium">+15.3% from last month</p>
           </CardContent>
         </Card>
         
         <Card ref={addToRefs}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-black">Activity</CardTitle>
-            <Activity className="h-4 w-4 text-orange-600" />
+            <CardTitle className="text-sm font-medium text-gray-900 dark:text-gray-100">Activity</CardTitle>
+            <Activity className="h-4 w-4 text-orange-600 dark:text-orange-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-black">{data.activity}%</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{data.activity}%</div>
             <p className="text-xs text-blue-600 font-medium">+2.5% from last hour</p>
           </CardContent>
         </Card>
         
         <Card ref={addToRefs}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-black">Growth</CardTitle>
-            <TrendingUp className="h-4 w-4 text-purple-600" />
+            <CardTitle className="text-sm font-medium text-gray-900 dark:text-gray-100">Growth</CardTitle>
+            <TrendingUp className="h-4 w-4 text-purple-600 dark:text-purple-400" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-black">{data.growth}%</div>
+            <div className="text-2xl font-bold text-gray-900 dark:text-gray-100">{data.growth}%</div>
             <p className="text-xs text-green-600 font-medium">+1.2% from yesterday</p>
           </CardContent>
         </Card>
@@ -148,35 +148,35 @@ export default function Dashboard() {
           <div className="data-table">
             <table className="w-full">
               <thead>
-                <tr className="border-b">
-                  <th className="text-left py-2">User</th>
-                  <th className="text-left py-2">Action</th>
-                  <th className="text-left py-2">Time</th>
-                  <th className="text-left py-2">Status</th>
-                  <th className="text-left py-2">Details</th>
+                <tr className="border-b dark:border-gray-700">
+                  <th className="text-left py-2 text-gray-900 dark:text-gray-100">User</th>
+                  <th className="text-left py-2 text-gray-900 dark:text-gray-100">Action</th>
+                  <th className="text-left py-2 text-gray-900 dark:text-gray-100">Time</th>
+                  <th className="text-left py-2 text-gray-900 dark:text-gray-100">Status</th>
+                  <th className="text-left py-2 text-gray-900 dark:text-gray-100">Details</th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b">
-                  <td className="py-2">john.doe@example.com</td>
-                  <td className="py-2">Login</td>
-                  <td className="py-2">2 mins ago</td>
-                  <td className="py-2">Success</td>
-                  <td className="py-2">From Chrome on macOS</td>
+                <tr className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                  <td className="py-2 text-gray-900 dark:text-gray-100">john.doe@example.com</td>
+                  <td className="py-2 text-gray-900 dark:text-gray-100">Login</td>
+                  <td className="py-2 text-gray-600 dark:text-gray-400">2 mins ago</td>
+                  <td className="py-2 text-green-600 dark:text-green-400">Success</td>
+                  <td className="py-2 text-gray-600 dark:text-gray-400">From Chrome on macOS</td>
                 </tr>
-                <tr className="border-b">
-                  <td className="py-2">jane.smith@example.com</td>
-                  <td className="py-2">Data Export</td>
-                  <td className="py-2">5 mins ago</td>
-                  <td className="py-2">Failed</td>
-                  <td className="py-2">Export service unavailable</td>
+                <tr className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                  <td className="py-2 text-gray-900 dark:text-gray-100">jane.smith@example.com</td>
+                  <td className="py-2 text-gray-900 dark:text-gray-100">Data Export</td>
+                  <td className="py-2 text-gray-600 dark:text-gray-400">5 mins ago</td>
+                  <td className="py-2 text-red-600 dark:text-red-400">Failed</td>
+                  <td className="py-2 text-gray-600 dark:text-gray-400">Export service unavailable</td>
                 </tr>
-                <tr className="border-b">
-                  <td className="py-2">admin@test.com</td>
-                  <td className="py-2">Profile Update</td>
-                  <td className="py-2">10 mins ago</td>
-                  <td className="py-2">Success</td>
-                  <td className="py-2">Changed email preferences</td>
+                <tr className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                  <td className="py-2 text-gray-900 dark:text-gray-100">admin@test.com</td>
+                  <td className="py-2 text-gray-900 dark:text-gray-100">Profile Update</td>
+                  <td className="py-2 text-gray-600 dark:text-gray-400">10 mins ago</td>
+                  <td className="py-2 text-green-600 dark:text-green-400">Success</td>
+                  <td className="py-2 text-gray-600 dark:text-gray-400">Changed email preferences</td>
                 </tr>
               </tbody>
             </table>

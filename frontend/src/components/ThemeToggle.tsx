@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 
 export function ThemeToggle() {
-  const { theme, setTheme } = useTheme();
+  const { setTheme } = useTheme();
 
   return (
     <DropdownMenu>

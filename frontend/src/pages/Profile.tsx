@@ -84,7 +84,7 @@ export default function Profile() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Profile</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Profile</h1>
         <Button 
           variant="outline" 
           onClick={() => {
@@ -112,20 +112,20 @@ export default function Profile() {
           <Card>
             <CardContent className="pt-6">
               <div className="flex flex-col items-center space-y-4">
-                <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center">
-                  <User className="w-8 h-8 text-gray-500" />
+                <div className="w-20 h-20 bg-gray-200 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                  <User className="w-8 h-8 text-gray-500 dark:text-gray-400" />
                 </div>
                 <div className="text-center">
-                  <h3 className="font-semibold text-lg">{user.name}</h3>
-                  <p className="text-sm text-gray-600">{user.email}</p>
+                  <h3 className="font-semibold text-lg text-gray-900 dark:text-gray-100">{user.name}</h3>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{user.email}</p>
                 </div>
                 <div className="w-full space-y-2">
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Calendar className="w-4 h-4 mr-2 text-gray-500" />
+                  <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                    <Calendar className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
                     <span>Joined March 2024</span>
                   </div>
-                  <div className="flex items-center text-sm text-gray-600">
-                    <Settings className="w-4 h-4 mr-2 text-gray-500" />
+                  <div className="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                    <Settings className="w-4 h-4 mr-2 text-gray-500 dark:text-gray-400" />
                     <span>Last updated today</span>
                   </div>
                 </div>
@@ -143,7 +143,7 @@ export default function Profile() {
               {isEditing ? (
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium mb-2">Name</label>
+                    <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Name</label>
                     <Input
                       value={formData.name}
                       onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -153,7 +153,7 @@ export default function Profile() {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium mb-2">Email</label>
+                    <label className="block text-sm font-medium mb-2 text-gray-700 dark:text-gray-300">Email</label>
                     <Input
                       type="email"
                       value={formData.email}
@@ -164,7 +164,7 @@ export default function Profile() {
                     />
                   </div>
                   {error && (
-                    <p className="text-sm text-red-600">{error}</p>
+                    <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
                   )}
                   <div className="flex space-x-2">
                     <Button type="submit" disabled={loading}>
@@ -194,19 +194,19 @@ export default function Profile() {
               ) : (
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-                    <p className="text-gray-900">{user.name}</p>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
+                    <p className="text-gray-900 dark:text-gray-100">{user.name}</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
-                    <p className="text-gray-900">{user.email}</p>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Email</label>
+                    <p className="text-gray-900 dark:text-gray-100">{user.email}</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">User ID</label>
-                    <p className="text-gray-900 font-mono text-sm">{user.id}</p>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">User ID</label>
+                    <p className="text-gray-900 dark:text-gray-100 font-mono text-sm">{user.id}</p>
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-1">Export Data</label>
+                    <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Export Data</label>
                     <div className="flex space-x-2">
                       <Select
                         value={exportFormat}
@@ -228,7 +228,7 @@ export default function Profile() {
                           </>
                         ) : (
                           <>
-                            <Download className="w-4 h-4 mr-2" />
+                            <Download className="w-4 h-4 mr-2 text-gray-600 dark:text-gray-400" />
                             Export Data
                           </>
                         )}
@@ -246,17 +246,17 @@ export default function Profile() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                <div className="flex justify-between items-center py-2 border-b">
-                  <span className="text-sm text-gray-700">Last login</span>
-                  <span className="text-sm text-gray-600">Today at 2:30 PM</span>
+                <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Last login</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">Today at 2:30 PM</span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b">
-                  <span className="text-sm text-gray-700">Profile updated</span>
-                  <span className="text-sm text-gray-600">2 days ago</span>
+                <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Profile updated</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">2 days ago</span>
                 </div>
-                <div className="flex justify-between items-center py-2 border-b">
-                  <span className="text-sm text-gray-700">Password changed</span>
-                  <span className="text-sm text-gray-600">1 week ago</span>
+                <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
+                  <span className="text-sm text-gray-700 dark:text-gray-300">Password changed</span>
+                  <span className="text-sm text-gray-600 dark:text-gray-400">1 week ago</span>
                 </div>
               </div>
             </CardContent>

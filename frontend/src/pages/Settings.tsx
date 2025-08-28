@@ -12,10 +12,10 @@ import { Bell, Shield, Palette, Globe, Sun, Moon, Monitor } from 'lucide-react';
 export default function Settings() {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { theme, setTheme, accentColor, setAccentColor } = useTheme();
   const settingsRef = useRef<HTMLDivElement>(null);
   const [settings, setSettings] = useState({
     notifications: true,
-    darkMode: false,
     language: 'en',
     autoSave: true,
   });
@@ -58,20 +58,20 @@ export default function Settings() {
   return (
     <div className="space-y-8" ref={settingsRef}>
       <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">Settings</h1>
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <Card className="settings-card">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <Bell className="w-5 h-5 settings-icon" />
+              <Bell className="w-5 h-5 settings-icon text-blue-600 dark:text-blue-400" />
               <span>Notifications</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Email notifications</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">Email notifications</span>
               <Button
                 variant={settings.notifications ? "default" : "outline"}
                 size="sm"
@@ -81,13 +81,13 @@ export default function Settings() {
               </Button>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Push notifications</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">Push notifications</span>
               <Button variant="outline" size="sm" disabled>
                 Coming Soon
               </Button>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Auto-save</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">Auto-save</span>
               <Button
                 variant={settings.autoSave ? "default" : "outline"}
                 size="sm"
@@ -99,63 +99,114 @@ export default function Settings() {
           </CardContent>
         </Card>
         
-        <Card className="settings-card">
-          <CardHeader>
-            <CardTitle className="flex items-center space-x-2">
-              <Palette className="w-5 h-5 settings-icon" />
-              <span>Appearance</span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Dark mode</span>
-              <Button
-                variant={settings.darkMode ? "default" : "outline"}
-                size="sm"
-                onClick={() => handleSettingChange('darkMode', !settings.darkMode)}
-              >
-                {settings.darkMode ? 'Dark' : 'Light'}
-              </Button>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Theme</span>
-              <Select defaultValue="blue" className="w-24">
-                <option value="blue">Blue</option>
-                <option value="green">Green</option>
-                <option value="purple">Purple</option>
-              </Select>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Compact mode</span>
-              <Button variant="outline" size="sm" disabled>
-                Beta
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <Card className="settings-card overflow-hidden relative">
+            <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 dark:from-blue-500/10 dark:to-purple-500/10" />
+            <CardHeader className="relative">
+              <CardTitle className="flex items-center space-x-2">
+                <Palette className="w-5 h-5 settings-icon text-purple-600 dark:text-purple-400" />
+                <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Appearance</span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4 relative">
+              <div className="flex items-center justify-between p-3 rounded-lg bg-gray-50 dark:bg-gray-800/50">
+                <div>
+                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">Theme Mode</span>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Choose your preferred theme</p>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    variant={theme === 'light' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setTheme('light')}
+                    className="gap-2"
+                  >
+                    <Sun className="w-4 h-4 text-amber-500 dark:text-amber-400" />
+                    Light
+                  </Button>
+                  <Button
+                    variant={theme === 'dark' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setTheme('dark')}
+                    className="gap-2"
+                  >
+                    <Moon className="w-4 h-4 text-slate-600 dark:text-slate-400" />
+                    Dark
+                  </Button>
+                  <Button
+                    variant={theme === 'system' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setTheme('system')}
+                    className="gap-2"
+                  >
+                    <Monitor className="w-4 h-4 text-gray-600 dark:text-gray-400" />
+                    System
+                  </Button>
+                </div>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                <div>
+                  <span className="text-sm font-medium text-gray-900 dark:text-gray-100">Accent Color</span>
+                  <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">Customize your interface colors</p>
+                </div>
+                <div className="flex gap-2">
+                  {(['blue', 'purple', 'green', 'orange', 'pink'] as const).map((color) => (
+                    <button
+                      key={color}
+                      onClick={() => setAccentColor(color)}
+                      className={`w-8 h-8 rounded-full transition-all ${
+                        accentColor === color ? 'ring-2 ring-offset-2 ring-primary scale-110' : 'hover:scale-105'
+                      }`}
+                      style={{
+                        backgroundColor: {
+                          blue: '#3b82f6',
+                          purple: '#a855f7',
+                          green: '#10b981',
+                          orange: '#f97316',
+                          pink: '#ec4899'
+                        }[color]
+                      }}
+                      aria-label={`Set ${color} accent color`}
+                    />
+                  ))}
+                </div>
+              </div>
+              <div className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                <span className="text-sm text-gray-700 dark:text-gray-300">Compact mode</span>
+                <Button variant="outline" size="sm" disabled>
+                  Beta
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
         
         <Card className="settings-card">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <Shield className="w-5 h-5 settings-icon" />
+              <Shield className="w-5 h-5 settings-icon text-green-600 dark:text-green-400" />
               <span>Privacy & Security</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Two-factor authentication</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">Two-factor authentication</span>
               <Button variant="outline" size="sm">
                 Enable
               </Button>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Data sharing</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">Data sharing</span>
               <Button variant="outline" size="sm">
                 Manage
               </Button>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Account deletion</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">Account deletion</span>
               <Button variant="destructive" size="sm">
                 Delete
               </Button>
@@ -166,13 +217,13 @@ export default function Settings() {
         <Card className="settings-card">
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
-              <Globe className="w-5 h-5 settings-icon" />
+              <Globe className="w-5 h-5 settings-icon text-orange-600 dark:text-orange-400" />
               <span>Regional Settings</span>
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Language</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">Language</span>
               <Select 
                 value={settings.language}
                 onChange={(e) => handleSettingChange('language', e.target.value)}
@@ -185,7 +236,7 @@ export default function Settings() {
               </Select>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Timezone</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">Timezone</span>
               <Select className="w-40">
                 <option>GMT-8 (Pacific)</option>
                 <option>GMT-5 (Eastern)</option>
@@ -193,7 +244,7 @@ export default function Settings() {
               </Select>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-gray-700">Date format</span>
+              <span className="text-sm text-gray-700 dark:text-gray-300">Date format</span>
               <Select className="w-36">
                 <option>MM/DD/YYYY</option>
                 <option>DD/MM/YYYY</option>
@@ -204,7 +255,7 @@ export default function Settings() {
         </Card>
       </div>
       
-      <div className="flex justify-end mt-12">
+      <div className="flex justify-end" style={{ marginTop: '8rem' }}>
         <Button onClick={() => {
           // Simulate settings save
           console.log('Settings saved:', settings);

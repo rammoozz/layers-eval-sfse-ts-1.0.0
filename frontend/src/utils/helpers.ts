@@ -8,7 +8,7 @@ export interface DataProcessingOptions {
 }
 
 // Using lodash functions - but importing the whole library kills bundle size
-export const processTableData = (data: any[], options: DataProcessingOptions = {}) => {
+export const processTableData = (data: Record<string, unknown>[], options: DataProcessingOptions = {}) => {
   const { sortBy, filterBy, groupBy } = options;
   
   let processed = _.cloneDeep(data);
@@ -32,7 +32,7 @@ export const processTableData = (data: any[], options: DataProcessingOptions = {
   return processed;
 };
 
-export const debouncedSearch = _.debounce((query: string, callback: (results: any[]) => void) => {
+export const debouncedSearch = _.debounce((query: string, callback: (results: typeof mockData) => void) => {
   // Simulate API call
   const results = _.filter(mockData, item => 
     _.includes(_.toLower(item.name), _.toLower(query))
@@ -40,16 +40,22 @@ export const debouncedSearch = _.debounce((query: string, callback: (results: an
   callback(results);
 }, 300);
 
-export const formatUserData = (users: any[]) => {
+interface UserInput {
+  firstName?: string;
+  lastName?: string;
+  permissions?: { roles: string[] }[];
+}
+
+export const formatUserData = (users: UserInput[]) => {
   return _.map(users, user => ({
     ...user,
-    fullName: _.startCase(_.toLower(`${(user as any)?.firstName || ''} ${(user as any)?.lastName || ''}`)),
-    initials: _.upperCase(String(_.head((user as any)?.firstName) || '') + String(_.head((user as any)?.lastName) || '')),
-    roles: _.uniq(_.flatten(user.permissions?.map((p: any) => p.roles) || [])),
+    fullName: _.startCase(_.toLower(`${user?.firstName || ''} ${user?.lastName || ''}`)),
+    initials: _.upperCase(String(_.head(user?.firstName) || '') + String(_.head(user?.lastName) || '')),
+    roles: _.uniq(_.flatten(user.permissions?.map((p) => p.roles) || [])),
   }));
 };
 
-export const mergeSettings = (defaultSettings: any, userSettings: any) => {
+export const mergeSettings = <T extends Record<string, unknown>>(defaultSettings: T, userSettings: Partial<T>) => {
   return _.merge({}, defaultSettings, userSettings);
 };
 

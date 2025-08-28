@@ -24,7 +24,9 @@
       "Bash(rm:*)",
       "Bash(git restore:*)",
       "mcp__playwright__browser_snapshot",
-      "Bash(powershell:*)"
+      "Bash(powershell:*)",
+      "Bash(npx tsc:*)",
+      "Bash(dir)"
     ],
     "deny": [],
     "ask": []
