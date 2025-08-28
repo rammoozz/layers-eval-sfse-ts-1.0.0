@@ -57,12 +57,11 @@ export type ExportRequest = z.infer<typeof ExportRequestSchema>;
 export type Notification = z.infer<typeof NotificationSchema>;
 export type CreateNotification = z.infer<typeof CreateNotificationSchema>;
 
-export type AuthUser = User & {
-  permissions: UserPermissions;
-};
-
 export type UserPermissions = {
-  user: AuthUser;
   canEdit: boolean;
   canDelete: boolean;
+};
+
+export type AuthUser = User & {
+  permissions: UserPermissions;
 };

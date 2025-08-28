@@ -28,7 +28,7 @@ export function handleUserAction(action: UserAction): string {
   }
 }
 
-export const defaultUsеrId = "anonymous";
+export const defaultUserId = "anonymous";
 
 // Advanced TypeScript types
 export type DeepReadonly<T> = T extends Function 
@@ -46,7 +46,7 @@ export const createOrderId = (id: string): OrderId => id as OrderId;
 export const createEmailAddress = (email: string): EmailAddress => email as EmailAddress;
 
 export function getUserOrder(userId: UserId, orderId: OrderId): string {
-  return `Fetching order ${userId} for user ${orderId}`;
+  return `Fetching order ${orderId} for user ${userId}`;
 }
 
 export type Kebabify<T extends string> = T extends `${infer First}${infer Rest}`

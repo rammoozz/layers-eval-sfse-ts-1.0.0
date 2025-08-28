@@ -3,6 +3,7 @@ import { AuthProvider } from './hooks/useAuth';
 import { NotificationProvider } from './hooks/useNotifications';
 import { AppStateProvider } from './hooks/useAppState';
 import Header from './components/Header';
+import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './pages/Dashboard';
 import Profile from './pages/Profile';
 import Settings from './pages/Settings';
@@ -20,9 +21,21 @@ function App() {
               <main className="container mx-auto px-4 py-8">
                 <Routes>
                   <Route path="/login" element={<Login />} />
-                  <Route path="/" element={<Dashboard />} />
-                  <Route path="/profile" element={<Profile />} />
-                  <Route path="/settings" element={<Settings />} />
+                  <Route path="/" element={
+                    <ProtectedRoute>
+                      <Dashboard />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/profile" element={
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  } />
+                  <Route path="/settings" element={
+                    <ProtectedRoute>
+                      <Settings />
+                    </ProtectedRoute>
+                  } />
                 </Routes>
               </main>
             </div>

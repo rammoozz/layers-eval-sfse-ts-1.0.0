@@ -135,4 +135,117 @@ test.describe('Login Flow', () => {
     const token = await page.evaluate(() => localStorage.getItem('token'));
     expect(token).toBeFalsy();
   });
+
+  // Authentication Security Tests - Verify fix for authentication bypass vulnerability
+  test('should reject API requests without authentication token', async ({ page }) => {
+    const helpers = new TestHelpers(page);
+    
+    // Clear any existing session
+    await helpers.setupCleanSession();
+    
+    // Try to access protected endpoint without token (directly to backend)
+    const response = await page.request.get('http://localhost:3001/api/users/profile');
+    
+    // Should be rejected with 401
+    expect(response.status()).toBe(401);
+    
+    const responseBody = await response.json();
+    expect(responseBody.message).toContain('Access token required');
+  });
+
+  test('should reject API requests with invalid authentication token', async ({ page }) => {
+    const helpers = new TestHelpers(page);
+    
+    // Clear any existing session
+    await helpers.setupCleanSession();
+    
+    // Try to access protected endpoint with invalid token (directly to backend)
+    const response = await page.request.get('http://localhost:3001/api/users/profile', {
+      headers: {
+        'Authorization': 'Bearer invalid-token-here'
+      }
+    });
+    
+    // Should be rejected with 403
+    expect(response.status()).toBe(403);
+    
+    const responseBody = await response.json();
+    expect(responseBody.message).toContain('Invalid or expired token');
+  });
+
+  test('should accept API requests with valid authentication token and include completion header', async ({ page }) => {
+    const helpers = new TestHelpers(page);
+    
+    // Login to get valid token (via backend directly)
+    const loginResponse = await page.request.post('http://localhost:3001/api/auth/login', {
+      data: {
+        email: TEST_CREDENTIALS.email,
+        password: TEST_CREDENTIALS.password
+      }
+    });
+    
+    expect(loginResponse.status()).toBe(200);
+    const loginData = await loginResponse.json();
+    const token = loginData.data.token;
+    expect(token).toBeTruthy();
+    
+    // Try to access protected endpoint with valid token (directly to backend)
+    const response = await page.request.get('http://localhost:3001/api/users/profile', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    
+    // Should be accepted with 200
+    expect(response.status()).toBe(200);
+    
+    // Should include X-Test-Completion header (verifies authentication fix)
+    const headers = response.headers();
+    expect(headers['x-test-completion']).toBe('true');
+    
+    const responseBody = await response.json();
+    expect(responseBody.success).toBe(true);
+  });
+
+  test('should protect all user endpoints from unauthenticated access', async ({ page }) => {
+    const helpers = new TestHelpers(page);
+    
+    // Clear any existing session
+    await helpers.setupCleanSession();
+    
+    // Test multiple protected endpoints (directly to backend)
+    const protectedEndpoints = [
+      'http://localhost:3001/api/users/profile',
+      'http://localhost:3001/api/users/export',
+      'http://localhost:3001/api/notifications'
+    ];
+    
+    for (const endpoint of protectedEndpoints) {
+      const response = await page.request.get(endpoint);
+      expect(response.status()).toBe(401);
+      
+      const responseBody = await response.json();
+      expect(responseBody.message).toContain('Access token required');
+    }
+  });
+
+  test('should protect POST endpoints from unauthenticated access', async ({ page }) => {
+    const helpers = new TestHelpers(page);
+    
+    // Clear any existing session
+    await helpers.setupCleanSession();
+    
+    // Try to update profile without authentication (directly to backend)
+    const response = await page.request.put('http://localhost:3001/api/users/profile', {
+      data: {
+        name: 'Test User',
+        email: 'test@example.com'
+      }
+    });
+    
+    expect(response.status()).toBe(401);
+    
+    const responseBody = await response.json();
+    expect(responseBody.message).toContain('Access token required');
+  });
 });

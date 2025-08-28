@@ -24,13 +24,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const token = localStorage.getItem('token');
     if (token) {
-      // Set timeout to check token validity
-      setTimeout(() => {
-        if (user === null) {
-          console.log('Token validation timeout - user still null');
-        }
-        fetchUser(token);
-      }, 1000);
+      fetchUser(token);
     } else {
       setLoading(false);
     }
@@ -45,8 +39,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
       });
       
       setUser(response.data.data);
+      
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
     } catch (error) {
       localStorage.removeItem('token');
+      delete axios.defaults.headers.common['Authorization'];
       console.error('Failed to fetch user:', error);
     } finally {
       setLoading(false);
@@ -62,6 +59,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       
       const { token, user } = response.data.data;
       localStorage.setItem('token', token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
       setUser(user);
     } catch (error) {
       throw new Error('Login failed');
@@ -79,6 +77,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const logout = () => {
     localStorage.removeItem('token');
+    delete axios.defaults.headers.common['Authorization'];
     setUser(null);
   };
 

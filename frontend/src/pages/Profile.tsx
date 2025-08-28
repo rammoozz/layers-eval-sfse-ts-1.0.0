@@ -7,7 +7,7 @@ import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { exportUserData } from '../services/api';
 import gsap from 'gsap';
-import { User, Calendar, Settings, Download } from 'lucide-react';
+import { User, Calendar, Settings, Download, Loader2 } from 'lucide-react';
 
 export default function Profile() {
   const { user, updateProfile } = useAuth();
@@ -107,7 +107,7 @@ export default function Profile() {
         </Button>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-[320px_1fr] gap-6">
         <div className="profile-sidebar">
           <Card>
             <CardContent className="pt-6">
@@ -134,7 +134,7 @@ export default function Profile() {
           </Card>
         </div>
         
-        <div className="lg:col-span-2">
+        <div>
           <Card ref={profileRef}>
             <CardHeader>
               <CardTitle>Profile Information</CardTitle>
@@ -168,7 +168,14 @@ export default function Profile() {
                   )}
                   <div className="flex space-x-2">
                     <Button type="submit" disabled={loading}>
-                      {loading ? 'Saving...' : 'Save Changes'}
+                      {loading ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Saving...
+                        </>
+                      ) : (
+                        'Save Changes'
+                      )}
                     </Button>
                     <Button 
                       type="button" 
@@ -214,8 +221,17 @@ export default function Profile() {
                         onClick={handleExport}
                         disabled={exportLoading}
                       >
-                        <Download className="w-4 h-4 mr-2" />
-                        {exportLoading ? 'Exporting...' : 'Export Data'}
+                        {exportLoading ? (
+                          <>
+                            <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                            Exporting...
+                          </>
+                        ) : (
+                          <>
+                            <Download className="w-4 h-4 mr-2" />
+                            Export Data
+                          </>
+                        )}
                       </Button>
                     </div>
                   </div>

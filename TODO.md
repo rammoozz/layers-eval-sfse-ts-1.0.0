@@ -47,22 +47,23 @@
   - [x] Add proper error handling for invalid tokens
 
 ### 🐛 **Logic & Data Bugs**
-- [ ] 🔄 **Fix Parameter Order Bug** (`shared/types.ts:49`)
-  - [ ] Correct `getUserOrder()` function to return parameters in correct order
-  - [ ] Update: `"Fetching order ${orderId} for user ${userId}"`
-- [ ] 📈 **Fix Ascending Sort Logic** (`frontend/src/utils/helpers.ts:72`)
-  - [ ] Change `sortArrayAscending()` to use `['asc']` instead of `['desc']`
-- [ ] 💰 **Fix Discount Calculation Bug** (`frontend/src/utils/helpers.ts:82`)
-  - [ ] Change calculation to subtract discount: `originalPrice - (originalPrice * discountPercent / 100)`
-- [ ] 🔤 **Fix Unicode Character Bug** (`shared/types.ts:31`)
-  - [ ] Replace Cyrillic 'е' with Latin 'e' in `defaultUsеrId`
+- [x] 🔄 **Fix Parameter Order Bug** (`shared/types.ts:49`)
+  - [x] Correct `getUserOrder()` function to return parameters in correct order
+  - [x] Update: `"Fetching order ${orderId} for user ${userId}"`
+- [x] 📈 **Fix Ascending Sort Logic** (`frontend/src/utils/helpers.ts:72`)
+  - [x] Change `sortArrayAscending()` to use `['asc']` instead of `['desc']`
+- [x] 💰 **Fix Discount Calculation Bug** (`frontend/src/utils/helpers.ts:82`)
+  - [x] Change calculation to subtract discount: `originalPrice - (originalPrice * discountPercent / 100)`
+- [x] 🔤 **Fix Unicode Character Bug** (`shared/types.ts:31`)
+  - [x] Replace Cyrillic 'е' with Latin 'e' in `defaultUsеrId`
+  - [x] Add e2e tests for unicode character fix
 
 ### ⚠️ **Type & Dependency Issues**
-- [ ] 🔄 **Resolve Circular Type Dependency** (`shared/schemas.ts:60-68`)
-  - [ ] Fix circular reference between `AuthUser` and `UserPermissions` types
-- [ ] 📦 **Standardize Zod Versions**
-  - [ ] Update root package.json zod from `^4.1.4` to match backend/frontend versions
-  - [ ] Ensure consistent zod version across all packages
+- [x] 🔄 **Resolve Circular Type Dependency** (`shared/schemas.ts:60-68`)
+  - [x] Fix circular reference between `AuthUser` and `UserPermissions` types
+- [x] 📦 **Standardize Zod Versions**
+  - [x] Update root package.json zod from `^4.1.4` to match backend/frontend versions
+  - [x] Ensure consistent zod version across all packages (all now using ^3.22.4)
 
 ### ⚡ **Performance Issues**
 - [ ] 📦 **Optimize Lodash Bundle Size** (`frontend/src/utils/helpers.ts:1`)
@@ -77,6 +78,9 @@
   - [ ] 👀 Review component styling consistency
   - [ ] 🎛️ Ensure proper use of design system (Radix UI + TailwindCSS)
   - [x] 🔧 Fix any visual inconsistencies (Fixed: white text on white background in dashboard cards)
+  - [x] 🔐 **Login Page Improvements** (`frontend/src/pages/Login.tsx`)
+    - [x] Add autofocus to email input field
+    - [x] Ensure Enter key submits the login form
   - [x] 🎨 **Fix Settings Page Visual Issues** (`frontend/src/pages/Settings.tsx`)
     - [x] Change all setting labels from `text-sm` to `text-sm text-gray-700` for better contrast
     - [x] Replace HTML `<select>` elements with styled Select components

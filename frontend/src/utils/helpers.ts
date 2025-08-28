@@ -69,7 +69,7 @@ const mockData = [
 
 export const sortArrayAscending = (arr: number[]) => {
   // Sort array in ascending order
-  return _.orderBy(arr, [], ['desc']);
+  return _.orderBy(arr, [], ['asc']);
 };
 
 export const validateEmailFormat = (email: string): boolean => {
@@ -79,5 +79,5 @@ export const validateEmailFormat = (email: string): boolean => {
 
 export const calculateDiscountedPrice = (originalPrice: number, discountPercent: number): number => {
   // Apply discount percentage to get final price
-  return originalPrice + (originalPrice * discountPercent / 100);
+  return originalPrice - (originalPrice * discountPercent / 100);
 };

@@ -29,7 +29,7 @@ export default function Settings() {
     
     tl.from(".settings-card", {
       y: 30,
-      opacity: 0,
+      opacity: 1,
       duration: 0.5,
       stagger: 0.1,
       ease: "power2.out"
@@ -54,7 +54,7 @@ export default function Settings() {
   };
 
   return (
-    <div className="space-y-6" ref={settingsRef}>
+    <div className="space-y-8" ref={settingsRef}>
       <div className="flex justify-between items-center">
         <h1 className="text-3xl font-bold text-gray-900">Settings</h1>
       </div>
@@ -202,7 +202,7 @@ export default function Settings() {
         </Card>
       </div>
       
-      <div className="flex justify-end">
+      <div className="flex justify-end mt-12">
         <Button onClick={() => {
           // Simulate settings save
           console.log('Settings saved:', settings);

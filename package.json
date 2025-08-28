@@ -23,6 +23,6 @@
     "concurrently": "^8.2.2"
   },
   "dependencies": {
-    "zod": "^4.1.4"
+    "zod": "^3.22.4"
   }
 }

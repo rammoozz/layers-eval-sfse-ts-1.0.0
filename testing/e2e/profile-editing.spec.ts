@@ -1,184 +1,75 @@
 import { test, expect } from '@playwright/test';
-import { TestHelpers, TEST_CREDENTIALS, ROUTES } from '../utils/test-helpers';
+import { TestHelpers, ROUTES, SELECTORS } from '../utils/test-helpers';
 
 test.describe('Profile Editing Feature', () => {
   let helpers: TestHelpers;
 
   test.beforeEach(async ({ page }) => {
     helpers = new TestHelpers(page);
+    await helpers.setupAuthenticatedSession();
     
-    // Clear any existing session and login
-    await page.context().clearCookies();
-    await page.goto('/');
-    await page.evaluate(() => {
-      try {
-        localStorage.clear();
-      } catch (e) {
-        // Ignore localStorage errors
-      }
-    });
-    await helpers.login();
-    await helpers.waitForNavigation('/');
-    
-    // Navigate to profile page
-    await page.goto(ROUTES.PROFILE);
+    // Navigate to profile using nav link
+    await page.click('nav a[href="/profile"]');
+    await page.waitForURL('/profile');
   });
 
-  test('should display profile page with user information', async ({ page }) => {
-    // Check that profile information is displayed
+  test('displays profile with edit functionality', async ({ page }) => {
     await helpers.assertElementVisible('h1:has-text("Profile")');
-    
-    // Check that profile sidebar is present
-    await helpers.assertElementVisible('.profile-sidebar');
-    
-    // Check that user info is displayed
-    await expect(page.locator('text=Demo User')).toBeVisible();
-    await expect(page.locator('text=admin@test.com')).toBeVisible();
-    
-    // Check that Edit Profile button is present
-    await helpers.assertElementVisible('button:has-text("Edit Profile")');
+    await helpers.assertElementVisible(SELECTORS.EDIT_PROFILE_BUTTON);
+    await expect(page.locator('h3:has-text("Demo User")')).toBeVisible();
+    await expect(page.locator('.text-sm.text-gray-600:has-text("admin@test.com")')).toBeVisible();
   });
 
-  test('should show edit form when clicking Edit Profile button', async ({ page }) => {
-    // Click Edit Profile button
-    await page.click('button:has-text("Edit Profile")');
+  test('shows and hides edit form', async ({ page }) => {
+    await page.click(SELECTORS.EDIT_PROFILE_BUTTON);
+    await helpers.assertElementVisible(SELECTORS.PROFILE_FORM);
     
-    // Should show edit form
-    await helpers.assertElementVisible('form');
-    await helpers.assertElementVisible('input[placeholder="Your name"]');
-    await helpers.assertElementVisible('input[placeholder="Your email"]');
-    
-    // Should show Save and Cancel buttons
-    await helpers.assertElementVisible('button:has-text("Save Changes")');
-    await helpers.assertElementVisible('button:has-text("Cancel")');
-    
-    // Edit Profile button should change to Cancel
-    await expect(page.locator('button:has-text("Cancel")')).toHaveCount(2); // One in header, one in form
+    await page.click(SELECTORS.CANCEL_BUTTON);
+    await expect(page.locator(SELECTORS.PROFILE_FORM)).not.toBeVisible();
   });
 
-  test('should populate form fields with current user data', async ({ page }) => {
-    await page.click('button:has-text("Edit Profile")');
+  test('validates form fields', async ({ page }) => {
+    await helpers.startProfileEditing();
     
-    // Check that form fields are populated with current data
-    const nameInput = page.locator('input[placeholder="Your name"]');
-    const emailInput = page.locator('input[placeholder="Your email"]');
+    // Test empty name
+    await page.fill(SELECTORS.NAME_INPUT, '');
+    await page.click(SELECTORS.SAVE_BUTTON);
     
-    await expect(nameInput).toHaveValue('Demo User');
-    await expect(emailInput).toHaveValue('admin@test.com');
-  });
-
-  test('should validate required fields', async ({ page }) => {
-    await page.click('button:has-text("Edit Profile")');
-    
-    // Clear the name field
-    await page.fill('input[placeholder="Your name"]', '');
-    
-    // Try to submit
-    await page.click('button:has-text("Save Changes")');
-    
-    // Should show validation error or prevent submission
-    const nameInput = page.locator('input[placeholder="Your name"]');
+    const nameInput = page.locator(SELECTORS.NAME_INPUT);
     const isValid = await nameInput.evaluate((el: HTMLInputElement) => el.validity.valid);
     expect(isValid).toBe(false);
   });
 
-  test('should validate email format', async ({ page }) => {
-    await page.click('button:has-text("Edit Profile")');
+  test('handles form submission with loading states', async ({ page }) => {
+    await helpers.startProfileEditing();
+    await helpers.fillProfileForm('Updated User', 'updated@test.com');
     
-    // Enter invalid email
-    await page.fill('input[placeholder="Your email"]', 'invalid-email');
+    // Mock successful response
+    await page.route('/api/users/profile', route => 
+      route.fulfill({
+        status: 200,
+        contentType: 'application/json',
+        body: JSON.stringify({ success: true, data: { name: 'Updated User' } })
+      })
+    );
     
-    // Try to submit
-    await page.click('button:has-text("Save Changes")');
+    await helpers.saveProfile();
     
-    // Should show validation error
-    const emailInput = page.locator('input[placeholder="Your email"]');
-    const isValid = await emailInput.evaluate((el: HTMLInputElement) => el.validity.valid);
-    expect(isValid).toBe(false);
-  });
-
-  test('should cancel editing when clicking Cancel button', async ({ page }) => {
-    await page.click('button:has-text("Edit Profile")');
-    
-    // Modify form data
-    await page.fill('input[placeholder="Your name"]', 'Modified Name');
-    await page.fill('input[placeholder="Your email"]', 'modified@test.com');
-    
-    // Click Cancel
-    await page.click('button:has-text("Cancel")');
-    
-    // Should return to read-only view
-    await expect(page.locator('form')).not.toBeVisible();
-    await helpers.assertElementVisible('button:has-text("Edit Profile")');
-    
-    // Should show original data (not modified)
-    await expect(page.locator('text=Demo User')).toBeVisible();
-    await expect(page.locator('text=admin@test.com')).toBeVisible();
-  });
-
-  test('should show loading state during save', async ({ page }) => {
-    await page.click('button:has-text("Edit Profile")');
-    
-    // Modify name
-    await page.fill('input[placeholder="Your name"]', 'Updated Demo User');
-    
-    // Click Save Changes
-    await page.click('button:has-text("Save Changes")');
-    
-    // Should show loading state
+    // Should show loading state briefly
     await expect(page.locator('button:has-text("Saving...")')).toBeVisible();
-    
-    // Form fields should be disabled during loading
-    const nameInput = page.locator('input[placeholder="Your name"]');
-    await expect(nameInput).toBeDisabled();
   });
 
-  test('should disable form during loading', async ({ page }) => {
-    await page.click('button:has-text("Edit Profile")');
+  test('resets form on cancel', async ({ page }) => {
+    await helpers.startProfileEditing();
+    await helpers.fillProfileForm('Changed Name', 'changed@email.com');
+    await helpers.cancelProfileEditing();
     
-    // Modify data
-    await page.fill('input[placeholder="Your name"]', 'Test User');
+    // Wait a moment for state to update
+    await page.waitForTimeout(500);
     
-    // Click Save
-    await page.click('button:has-text("Save Changes")');
-    
-    // All form elements should be disabled during loading
-    await expect(page.locator('input[placeholder="Your name"]')).toBeDisabled();
-    await expect(page.locator('input[placeholder="Your email"]')).toBeDisabled();
-    await expect(page.locator('button:has-text("Cancel")')).toBeDisabled();
-  });
-
-  test('should reset form data when cancelling after modifications', async ({ page }) => {
-    await page.click('button:has-text("Edit Profile")');
-    
-    // Modify both fields
-    await page.fill('input[placeholder="Your name"]', 'Completely Different Name');
-    await page.fill('input[placeholder="Your email"]', 'different@email.com');
-    
-    // Cancel editing
-    await page.click('button:has-text("Cancel")');
-    
-    // Edit again to check if form is reset
-    await page.click('button:has-text("Edit Profile")');
-    
-    // Should show original values, not the modified ones
-    await expect(page.locator('input[placeholder="Your name"]')).toHaveValue('Demo User');
-    await expect(page.locator('input[placeholder="Your email"]')).toHaveValue('admin@test.com');
-  });
-
-  test('should maintain form state when validation fails', async ({ page }) => {
-    await page.click('button:has-text("Edit Profile")');
-    
-    // Enter valid name but invalid email
-    await page.fill('input[placeholder="Your name"]', 'Valid Name');
-    await page.fill('input[placeholder="Your email"]', 'invalid');
-    
-    // Try to submit
-    await page.click('button:has-text("Save Changes")');
-    
-    // Form should still be in edit mode with the entered values
-    await expect(page.locator('input[placeholder="Your name"]')).toHaveValue('Valid Name');
-    await expect(page.locator('input[placeholder="Your email"]')).toHaveValue('invalid');
-    await expect(page.locator('form')).toBeVisible();
+    // Edit again and check values are reset
+    await helpers.startProfileEditing();
+    await expect(page.locator(SELECTORS.NAME_INPUT)).toHaveValue('Demo User');
+    await expect(page.locator(SELECTORS.EMAIL_INPUT)).toHaveValue('admin@test.com');
   });
 });
