@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { AuthProvider } from './hooks/useAuth';
 import { NotificationProvider } from './hooks/useNotifications';
 import { AppStateProvider } from './hooks/useAppState';
+import { ThemeProvider } from './contexts/ThemeContext';
 import Header from './components/Header';
 import ProtectedRoute from './components/ProtectedRoute';
 import Dashboard from './pages/Dashboard';
@@ -12,37 +13,39 @@ import './App.css';
 
 function App() {
   return (
-    <AppStateProvider>
-      <AuthProvider>
-        <NotificationProvider>
-          <Router>
-            <div className="min-h-screen bg-background">
-              <Header />
-              <main className="container mx-auto px-4 py-8">
-                <Routes>
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/" element={
-                    <ProtectedRoute>
-                      <Dashboard />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/profile" element={
-                    <ProtectedRoute>
-                      <Profile />
-                    </ProtectedRoute>
-                  } />
-                  <Route path="/settings" element={
-                    <ProtectedRoute>
-                      <Settings />
-                    </ProtectedRoute>
-                  } />
-                </Routes>
-              </main>
-            </div>
-          </Router>
-        </NotificationProvider>
-      </AuthProvider>
-    </AppStateProvider>
+    <ThemeProvider>
+      <AppStateProvider>
+        <AuthProvider>
+          <NotificationProvider>
+            <Router>
+              <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/95 transition-colors duration-500">
+                <Header />
+                <main className="container mx-auto px-4 py-8">
+                  <Routes>
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/" element={
+                      <ProtectedRoute>
+                        <Dashboard />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/profile" element={
+                      <ProtectedRoute>
+                        <Profile />
+                      </ProtectedRoute>
+                    } />
+                    <Route path="/settings" element={
+                      <ProtectedRoute>
+                        <Settings />
+                      </ProtectedRoute>
+                    } />
+                  </Routes>
+                </main>
+              </div>
+            </Router>
+          </NotificationProvider>
+        </AuthProvider>
+      </AppStateProvider>
+    </ThemeProvider>
   );
 }
 

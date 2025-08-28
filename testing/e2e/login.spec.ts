@@ -27,7 +27,7 @@ test.describe('Login Flow', () => {
     await helpers.assertElementVisible('button[type="submit"]');
     
     // Check page title or heading
-    await expect(page.locator('h1')).toContainText(['Login', 'Sign In']);
+    await expect(page.locator('h3')).toContainText('Login');
   });
 
   test('should successfully login with valid credentials', async ({ page }) => {
@@ -51,15 +51,15 @@ test.describe('Login Flow', () => {
     expect(response.status()).toBe(200);
     
     // Should redirect to dashboard
-    await helpers.waitForNavigation('/dashboard');
-    helpers.assertCurrentUrl('/dashboard');
+    await helpers.waitForNavigation('/');
+    helpers.assertCurrentUrl('/');
     
     // Check that user is logged in (token should be in localStorage)
     const token = await page.evaluate(() => localStorage.getItem('token'));
     expect(token).toBeTruthy();
     
     // Check that dashboard content is loaded
-    await helpers.assertElementVisible('[data-testid="dashboard"]');
+    await helpers.assertElementVisible('h1:has-text("Dashboard")');
   });
 
   test('should show error message with invalid credentials', async ({ page }) => {
@@ -75,7 +75,7 @@ test.describe('Login Flow', () => {
     await page.click('button[type="submit"]');
     
     // Should show error message
-    await expect(page.locator('.error, [data-testid="error-message"]')).toBeVisible();
+    await expect(page.locator('p:has-text("Invalid credentials")')).toBeVisible();
     
     // Should remain on login page
     helpers.assertCurrentUrl('/login');
@@ -107,14 +107,14 @@ test.describe('Login Flow', () => {
     
     // First login
     await helpers.login();
-    await helpers.waitForNavigation('/dashboard');
+    await helpers.waitForNavigation('/');
     
     // Try to access login page again
     await page.goto(ROUTES.LOGIN);
     
     // Should be redirected back to dashboard
     await page.waitForTimeout(1000); // Give time for redirect
-    helpers.assertCurrentUrl('/dashboard');
+    helpers.assertCurrentUrl('/');
   });
 
   test('should logout successfully', async ({ page }) => {
@@ -122,7 +122,7 @@ test.describe('Login Flow', () => {
     
     // Login first
     await helpers.login();
-    await helpers.waitForNavigation('/dashboard');
+    await helpers.waitForNavigation('/');
     
     // Logout
     await helpers.logout();

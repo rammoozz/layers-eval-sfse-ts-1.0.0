@@ -66,3 +66,11 @@ jspm_packages/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Test Results
+test-results/
+playwright-report/
+**/test-results/
+**/playwright-report/
+testing/test-results/
+testing/playwright-report/

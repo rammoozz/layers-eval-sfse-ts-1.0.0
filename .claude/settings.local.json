@@ -22,7 +22,9 @@
       "Bash(wmic process where ProcessId=99844 delete:*)",
       "Bash(npm test:*)",
       "Bash(rm:*)",
-      "Bash(git restore:*)"
+      "Bash(git restore:*)",
+      "mcp__playwright__browser_snapshot",
+      "Bash(powershell:*)"
     ],
     "deny": [],
     "ask": []

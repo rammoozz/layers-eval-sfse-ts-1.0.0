@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
+import { useTheme } from '../contexts/ThemeContext';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Select } from '@/components/ui/select';
+import { motion } from 'framer-motion';
 import gsap from 'gsap';
-import { Bell, Shield, Palette, Globe } from 'lucide-react';
+import { Bell, Shield, Palette, Globe, Sun, Moon, Monitor } from 'lucide-react';
 
 export default function Settings() {
   const { user } = useAuth();
