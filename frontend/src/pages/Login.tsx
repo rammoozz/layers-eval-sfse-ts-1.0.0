@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
-import { Loader2, Mail, Lock, Sparkles, Zap, Shield, Layers, ArrowRight, Github, Twitter } from 'lucide-react';
+import { Loader2, Mail, Lock, Sparkles, Zap, Shield, Layers } from 'lucide-react';
 import gsap from 'gsap';
 
 export default function Login() {
@@ -106,7 +106,9 @@ export default function Login() {
     
     // Shake animation on submit
     gsap.to(cardRef.current, {
-      x: [0, -5, 5, -3, 3, 0],
+      keyframes: {
+        x: [0, -5, 5, -3, 3, 0],
+      },
       duration: 0.3,
       ease: 'power2.inOut',
     });
@@ -126,7 +128,9 @@ export default function Login() {
       setError('Invalid credentials');
       // Error shake animation
       gsap.to(cardRef.current, {
-        x: [0, -10, 10, -5, 5, 0],
+        keyframes: {
+          x: [0, -10, 10, -5, 5, 0],
+        },
         duration: 0.5,
         ease: 'power2.inOut',
       });

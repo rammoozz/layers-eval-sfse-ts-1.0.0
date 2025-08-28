@@ -1,4 +1,6 @@
-import React, { useEffect, useRef, useState, Suspense } from 'react';
+import { useEffect, useRef, useState, Suspense } from 'react';
+// Make Suspense available globally for recharts
+(window as any).Suspense = Suspense;
 import { useAppState } from '../hooks/useAppState';
 import { useNavigate } from 'react-router-dom';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card';
@@ -6,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import gsap from 'gsap';
 import { BarChart3, Users, Activity, TrendingUp } from 'lucide-react';
 import { processTableData, sortArrayAscending } from '../utils/helpers';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 
 interface DashboardData {
@@ -15,11 +18,15 @@ interface DashboardData {
   growth: number;
 }
 
-const ExpensiveChart = React.lazy(() => 
-  new Promise<{ default: React.ComponentType }>(resolve => 
-    setTimeout(() => resolve({ default: () => <div>Chart loaded</div> }), 2000)
-  )
-);
+const chartData = [
+  { name: 'Jan', users: 400, revenue: 2400, activity: 2400 },
+  { name: 'Feb', users: 300, revenue: 1398, activity: 2210 },
+  { name: 'Mar', users: 200, revenue: 9800, activity: 2290 },
+  { name: 'Apr', users: 278, revenue: 3908, activity: 2000 },
+  { name: 'May', users: 189, revenue: 4800, activity: 2181 },
+  { name: 'Jun', users: 239, revenue: 3800, activity: 2500 },
+  { name: 'Jul', users: 349, revenue: 4300, activity: 2100 },
+];
 
 export default function Dashboard() {
   useAppState();
@@ -72,6 +79,7 @@ export default function Dashboard() {
     }, 5000);
     
     return () => clearInterval(interval);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data]);
   
   const addToRefs = (el: HTMLDivElement) => {
@@ -137,12 +145,42 @@ export default function Dashboard() {
       
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>Analytics Chart</CardTitle>
+          <CardTitle>Analytics Overview</CardTitle>
         </CardHeader>
         <CardContent>
-          <Suspense fallback={<div>Loading chart...</div>}>
-            <ExpensiveChart />
-          </Suspense>
+          <ResponsiveContainer width="100%" height={300}>
+            <AreaChart data={chartData}>
+              <defs>
+                <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}/>
+                </linearGradient>
+                <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#10b981" stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor="#10b981" stopOpacity={0}/>
+                </linearGradient>
+                <linearGradient id="colorActivity" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#f97316" stopOpacity={0.8}/>
+                  <stop offset="95%" stopColor="#f97316" stopOpacity={0}/>
+                </linearGradient>
+              </defs>
+              <CartesianGrid strokeDasharray="3 3" className="stroke-gray-200 dark:stroke-gray-700" />
+              <XAxis dataKey="name" className="text-gray-600 dark:text-gray-400" />
+              <YAxis className="text-gray-600 dark:text-gray-400" />
+              <Tooltip 
+                contentStyle={{ 
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                  border: '1px solid #e5e7eb',
+                  borderRadius: '6px'
+                }}
+                labelStyle={{ color: '#111827' }}
+              />
+              <Legend />
+              <Area type="monotone" dataKey="users" stroke="#3b82f6" fillOpacity={1} fill="url(#colorUsers)" />
+              <Area type="monotone" dataKey="revenue" stroke="#10b981" fillOpacity={1} fill="url(#colorRevenue)" />
+              <Area type="monotone" dataKey="activity" stroke="#f97316" fillOpacity={1} fill="url(#colorActivity)" />
+            </AreaChart>
+          </ResponsiveContainer>
         </CardContent>
       </Card>
       

@@ -148,3 +148,14 @@
 - Backend runs on http://localhost:3001
 - Frontend runs on http://localhost:5173
 - Keep code small, reusable, fully typed, and production ready
+
+│                                              
+ ⚠️ REMAINING MINOR ITEMS (Not blocking       
+ submission):                                 
+                                              
+ These are optimization/nice-to-have items    
+ that don't prevent submission:               
+ - Some performance optimizations (code       
+ splitting for 600KB+ bundle)                 
+ - Additional testing coverage                
+ - Token refresh mechanism     

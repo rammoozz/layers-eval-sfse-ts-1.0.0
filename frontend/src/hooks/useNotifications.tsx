@@ -18,16 +18,6 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [ws, setWs] = useState<WebSocket | null>(null);
   
-  useEffect(() => {
-    connectWebSocket();
-    
-    return () => {
-      if (ws) {
-        ws.close();
-      }
-    };
-  }, []); // Only run once on mount
-  
   const connectWebSocket = () => {
     const token = localStorage.getItem('token');
     if (!token) return;
@@ -61,6 +51,17 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
       setTimeout(connectWebSocket, 5000);
     };
   };
+  
+  useEffect(() => {
+    connectWebSocket();
+    
+    return () => {
+      if (ws) {
+        ws.close();
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only run once on mount
   
   const addNotification = (notification: Omit<Notification, 'id' | 'createdAt'>) => {
     const newNotification: Notification = {
