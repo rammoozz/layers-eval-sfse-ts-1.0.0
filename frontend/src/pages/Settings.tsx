@@ -29,15 +29,23 @@ export default function Settings() {
     // Create GSAP timeline animation
     const tl = gsap.timeline();
     
-    tl.from(".settings-card", {
+    tl.fromTo(".settings-card", {
       y: 30,
+      opacity: 0
+    }, {
+      y: 0,
       opacity: 1,
       duration: 0.5,
       stagger: 0.1,
       ease: "power2.out"
-    }).from(".settings-icon", {
+    }).fromTo(".settings-icon", {
       scale: 0,
       rotation: 180,
+      opacity: 0
+    }, {
+      scale: 1,
+      rotation: 0,
+      opacity: 1,
       duration: 0.4,
       stagger: 0.05,
       ease: "back.out(1.7)"
@@ -255,7 +263,7 @@ export default function Settings() {
         </Card>
       </div>
       
-      <div className="flex justify-end" style={{ marginTop: '8rem' }}>
+      <div className="flex justify-end" style={{ marginTop: '3rem' }}>
         <Button onClick={() => {
           // Simulate settings save
           console.log('Settings saved:', settings);

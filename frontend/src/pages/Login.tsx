@@ -154,27 +154,49 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center relative overflow-hidden">
+    <div ref={containerRef} className="min-h-screen flex items-center justify-center relative overflow-hidden">
       {/* Animated gradient background */}
-      <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 animate-gradient-x"></div>
+      <div 
+        ref={bgRef}
+        className="absolute inset-0 bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600"
+        style={{ backgroundSize: '200% 200%' }}
+      />
       
       {/* Floating animated shapes */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-10 -left-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
-        <div className="absolute -top-10 -right-10 w-72 h-72 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-2000"></div>
-        <div className="absolute -bottom-10 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
+        <div 
+          ref={el => floatingRefs.current[0] = el}
+          className="absolute -top-10 -left-10 w-72 h-72 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-70"
+        />
+        <div 
+          ref={el => floatingRefs.current[1] = el}
+          className="absolute -top-10 -right-10 w-72 h-72 bg-yellow-500 rounded-full mix-blend-multiply filter blur-xl opacity-70"
+        />
+        <div 
+          ref={el => floatingRefs.current[2] = el}
+          className="absolute -bottom-10 left-20 w-72 h-72 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-70"
+        />
       </div>
 
       {/* Floating icons */}
-      <Sparkles className="absolute top-20 left-20 text-white/20 w-8 h-8 animate-float" />
-      <Zap className="absolute top-40 right-32 text-white/20 w-6 h-6 animate-float animation-delay-2000" />
-      <Shield className="absolute bottom-32 left-32 text-white/20 w-10 h-10 animate-float animation-delay-4000" />
+      <Sparkles 
+        ref={el => iconRefs.current[0] = el}
+        className="absolute top-20 left-20 text-white/30 w-8 h-8"
+      />
+      <Zap 
+        ref={el => iconRefs.current[1] = el}
+        className="absolute top-40 right-32 text-white/30 w-6 h-6"
+      />
+      <Shield 
+        ref={el => iconRefs.current[2] = el}
+        className="absolute bottom-32 left-32 text-white/30 w-10 h-10"
+      />
 
-      <Card className="w-full max-w-md relative z-10 backdrop-blur-lg bg-white/95 shadow-2xl border-0 animate-slide-up">
+      <Card ref={cardRef} className="w-full max-w-md relative z-10 backdrop-blur-lg bg-white/95 dark:bg-gray-900/95 shadow-2xl border-0">
         <CardHeader className="space-y-1 pb-6">
           <div className="flex justify-center mb-4">
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full blur-lg opacity-75 animate-pulse"></div>
+              <div className="logo-glow absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full blur-lg opacity-75"></div>
               <div className="relative bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full p-4">
                 <Layers className="w-10 h-10 text-white" />
               </div>
@@ -183,42 +205,46 @@ export default function Login() {
           <CardTitle className="text-3xl font-bold text-center bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
             Welcome Back
           </CardTitle>
-          <p className="text-center text-gray-500 text-sm">Sign in to continue to Layers</p>
+          <p className="text-center text-gray-500 dark:text-gray-400 text-sm">Sign in to continue to Layers</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <div className="relative group">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 transition-colors group-focus-within:text-indigo-500" />
+                <Mail className="email-icon absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5 transition-colors group-focus-within:text-indigo-500 dark:group-focus-within:text-indigo-400 pointer-events-none" />
                 <Input
                   type="email"
                   placeholder="Enter your email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  onFocus={() => handleInputFocus('email')}
+                  onBlur={() => handleInputBlur('email')}
                   required
                   autoFocus
                   disabled={loading}
-                  className="pl-10 h-12 border-gray-200 focus:border-indigo-500 transition-all duration-300 hover:border-gray-300 bg-white/50 backdrop-blur-sm"
+                  className="pl-10 h-12 border-gray-200 dark:border-gray-700 focus:border-indigo-500 dark:focus:border-indigo-400 transition-all duration-300 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800"
                 />
               </div>
             </div>
             <div className="space-y-2">
               <div className="relative group">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5 transition-colors group-focus-within:text-indigo-500" />
+                <Lock className="password-icon absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-5 h-5 transition-colors group-focus-within:text-indigo-500 dark:group-focus-within:text-indigo-400 pointer-events-none" />
                 <Input
                   type="password"
                   placeholder="Enter your password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  onFocus={() => handleInputFocus('password')}
+                  onBlur={() => handleInputBlur('password')}
                   required
                   disabled={loading}
-                  className="pl-10 h-12 border-gray-200 focus:border-indigo-500 transition-all duration-300 hover:border-gray-300 bg-white/50 backdrop-blur-sm"
+                  className="pl-10 h-12 border-gray-200 dark:border-gray-700 focus:border-indigo-500 dark:focus:border-indigo-400 transition-all duration-300 hover:border-gray-300 dark:hover:border-gray-600 bg-white dark:bg-gray-800"
                 />
               </div>
             </div>
             {error && (
-              <div className="animate-shake">
-                <p className="text-sm text-red-600 bg-red-50 p-3 rounded-lg border border-red-200">
+              <div>
+                <p className="text-sm text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-900/20 p-3 rounded-lg border border-red-200 dark:border-red-800">
                   {error}
                 </p>
               </div>
@@ -240,106 +266,9 @@ export default function Login() {
                 </>
               )}
             </Button>
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-200"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Demo Account</span>
-              </div>
-            </div>
-            <p className="text-sm text-gray-600 text-center bg-gray-50 p-3 rounded-lg">
-              <span className="font-semibold">Email:</span> admin@test.com<br/>
-              <span className="font-semibold">Password:</span> password123
-            </p>
           </form>
         </CardContent>
       </Card>
-
-      <style jsx>{`
-        @keyframes gradient-x {
-          0%, 100% {
-            background-size: 200% 200%;
-            background-position: left center;
-          }
-          50% {
-            background-size: 200% 200%;
-            background-position: right center;
-          }
-        }
-        
-        @keyframes blob {
-          0%, 100% {
-            transform: translate(0px, 0px) scale(1);
-          }
-          33% {
-            transform: translate(30px, -50px) scale(1.1);
-          }
-          66% {
-            transform: translate(-20px, 20px) scale(0.9);
-          }
-        }
-        
-        @keyframes float {
-          0%, 100% {
-            transform: translateY(0px) rotate(0deg);
-          }
-          50% {
-            transform: translateY(-20px) rotate(10deg);
-          }
-        }
-        
-        @keyframes slide-up {
-          0% {
-            opacity: 0;
-            transform: translateY(20px);
-          }
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-        
-        @keyframes shake {
-          0%, 100% {
-            transform: translateX(0);
-          }
-          10%, 30%, 50%, 70%, 90% {
-            transform: translateX(-2px);
-          }
-          20%, 40%, 60%, 80% {
-            transform: translateX(2px);
-          }
-        }
-        
-        .animate-gradient-x {
-          animation: gradient-x 15s ease infinite;
-        }
-        
-        .animate-blob {
-          animation: blob 7s infinite;
-        }
-        
-        .animate-float {
-          animation: float 6s ease-in-out infinite;
-        }
-        
-        .animate-slide-up {
-          animation: slide-up 0.5s ease-out;
-        }
-        
-        .animate-shake {
-          animation: shake 0.5s ease-in-out;
-        }
-        
-        .animation-delay-2000 {
-          animation-delay: 2s;
-        }
-        
-        .animation-delay-4000 {
-          animation-delay: 4s;
-        }
-      `}</style>
     </div>
   );
 }

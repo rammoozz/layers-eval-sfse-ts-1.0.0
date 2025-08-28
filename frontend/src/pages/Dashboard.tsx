@@ -38,8 +38,14 @@ export default function Dashboard() {
     // Create GSAP timeline but never kill it
     const tl = gsap.timeline();
     
-    tl.from(cardsRef.current, {
+    // Set initial state for all cards to ensure consistent animation
+    gsap.set(cardsRef.current, {
       y: 50,
+      opacity: 0
+    });
+    
+    tl.to(cardsRef.current, {
+      y: 0,
       opacity: 1,
       duration: 0.6,
       stagger: 0.1,
@@ -83,7 +89,7 @@ export default function Dashboard() {
         </Button>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 -mt-8 mb-16">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-8 mb-8">
         <Card ref={addToRefs}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-gray-900 dark:text-gray-100">Total Users</CardTitle>

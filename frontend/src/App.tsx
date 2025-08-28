@@ -18,29 +18,33 @@ function App() {
         <AuthProvider>
           <NotificationProvider>
             <Router>
-              <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/95 transition-colors duration-500">
-                <Header />
-                <main className="container mx-auto px-4 py-8">
-                  <Routes>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/" element={
-                      <ProtectedRoute>
-                        <Dashboard />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/profile" element={
-                      <ProtectedRoute>
-                        <Profile />
-                      </ProtectedRoute>
-                    } />
-                    <Route path="/settings" element={
-                      <ProtectedRoute>
-                        <Settings />
-                      </ProtectedRoute>
-                    } />
-                  </Routes>
-                </main>
-              </div>
+              <Routes>
+                <Route path="/login" element={<Login />} />
+                <Route path="*" element={
+                  <div className="min-h-screen bg-gradient-to-br from-background via-background to-background/95 transition-colors duration-500">
+                    <Header />
+                    <main className="container mx-auto px-4 py-8">
+                      <Routes>
+                        <Route path="/" element={
+                          <ProtectedRoute>
+                            <Dashboard />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/profile" element={
+                          <ProtectedRoute>
+                            <Profile />
+                          </ProtectedRoute>
+                        } />
+                        <Route path="/settings" element={
+                          <ProtectedRoute>
+                            <Settings />
+                          </ProtectedRoute>
+                        } />
+                      </Routes>
+                    </main>
+                  </div>
+                } />
+              </Routes>
             </Router>
           </NotificationProvider>
         </AuthProvider>
